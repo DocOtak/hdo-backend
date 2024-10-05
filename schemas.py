@@ -80,5 +80,8 @@ class Cruise(BaseModel):
     license: License | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
     sites: Sites | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
 
+    start_port: str | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
+    end_port: str | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
+
 main_model_schema = Cruise.model_json_schema()
 print(json.dumps(main_model_schema, indent=2))
