@@ -99,10 +99,15 @@ class LineString(BaseModel):
     type: Literal["LineString"]
     coordinates: Annotated[list[Point2D], Field(min_length=2)]
 
+class Empty(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    ...
+
 class Geometry(BaseModel):
     model_config = ConfigDict(extra="forbid")
     
-    track: LineString
+    track: LineString | Empty
 
 class Cruise(BaseModel):
     model_config = ConfigDict(extra="forbid")
