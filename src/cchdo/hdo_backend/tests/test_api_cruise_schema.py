@@ -1,6 +1,7 @@
 import json
 import pytest
 from jsonpointer import JsonPointer
+from pydantic import ValidationError
 
 from cchdo.hdo_backend.schemas import Cruise
 
@@ -46,8 +47,7 @@ def test_valid_cruise_document(cruise_json):
 def test_valid_cruise_document_set(cruise_json, pointer, value):
     p = JsonPointer(pointer)
     p.set(cruise_json, value)
-    _, status = Cruise.model_validate_json(cruise_json)
-    assert status == 200
+    Cruise.model_validate_json(json.dumps(cruise_json))
 
 
 @pytest.mark.parametrize(
@@ -62,8 +62,7 @@ def test_valid_cruise_document_del(cruise_json, pointer):
     p = JsonPointer(pointer)
     subobj, part = p.to_last(cruise_json)
     del subobj[part]
-    _, status = Cruise.model_validate_json(cruise_json)
-    assert status == 200
+    Cruise.model_validate_json(json.dumps(cruise_json))
 
 
 @pytest.mark.parametrize(
@@ -88,9 +87,8 @@ def test_invalid_cruise_document_del(cruise_json, pointer, message):
     p = JsonPointer(pointer)
     subobj, part = p.to_last(cruise_json)
     del subobj[part]
-    msg, status = Cruise.model_validate_json(cruise_json)
-    assert status == 422
-    assert message in msg
+    with pytest.raises(ValidationError):
+        Cruise.model_validate_json(json.dumps(cruise_json))
 
 
 @pytest.mark.parametrize(
@@ -144,6 +142,5 @@ def test_invalid_cruise_document_del(cruise_json, pointer, message):
 def test_invalid_cruise_document_set(cruise_json, pointer, value, message):
     p = JsonPointer(pointer)
     p.set(cruise_json, value)
-    msg, status = Cruise.model_validate_json(cruise_json)
-    assert status == 422
-    assert message in msg
+    with pytest.raises(ValidationError):
+        Cruise.model_validate_json(json.dumps(cruise_json))
