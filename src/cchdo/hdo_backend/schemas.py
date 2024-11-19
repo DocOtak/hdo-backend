@@ -4,7 +4,7 @@ from enum import Enum, StrEnum
 from importlib import resources
 from typing import Annotated, Any, Literal, NamedTuple
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, constr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, StringConstraints
 from pydantic.json_schema import SkipJsonSchema
 
 from cchdo.hdo_backend import data
@@ -16,7 +16,7 @@ _allowed_county_codes.extend([c["alpha-4"] for c in _iso31663])
 # emptry string country is OK too
 _allowed_county_codes.append("")
 
-CountryEnum = StrEnum(
+CountryEnum = StrEnum(  # type: ignore
     "CountryEnum",
     names=(
         (country, country) if country != "" else ("Empty", "")
@@ -38,17 +38,30 @@ class LicenseEnum(Enum):
     CCBY10 = "CC BY 1.0"
 
 
-class License(BaseModel):
-    license: LicenseEnum
-    name: str = Field(min_length=1)
-    email: EmailStr
-    institution: str = Field(min_length=1)
-
-
 class CFRobotEnum(Enum):
     BOTTLE = "bottle"
     CTD = "ctd"
     SUMMARY = "summary"
+
+
+class ReferenceType(Enum):
+    DOI = "doi"
+    ARK = "ark"
+    ALIAS = "alias"
+    ACCESSION = "accession"
+    CITATION = "citation"
+    LINK = "link"
+    RELATED = "related"
+    FLOAT = "float"
+
+
+class License(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    license: LicenseEnum
+    name: str = Field(min_length=1)
+    email: EmailStr
+    institution: str = Field(min_length=1)
 
 
 class Participant(BaseModel):
@@ -71,13 +84,16 @@ class Note(BaseModel):
     body: list[str]
 
 
+CollectionStr = Annotated[str, StringConstraints(min_length=1, pattern=r"^\S")]
+
+
 class Collections(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    woce_lines: set[constr(min_length=1, pattern=r"^\S")]
-    programs: set[constr(min_length=1, pattern=r"^\S")]
-    oceans: set[constr(min_length=1, pattern=r"^\S")]
-    groups: set[constr(min_length=1, pattern=r"^\S")]
+    woce_lines: set[CollectionStr]
+    programs: set[CollectionStr]
+    oceans: set[CollectionStr]
+    groups: set[CollectionStr]
 
 
 class Sites(BaseModel):
@@ -89,17 +105,6 @@ class Sites(BaseModel):
     dimes_ucsd_edu: dict | SkipJsonSchema[None] = Field(
         None, json_schema_extra=pop_default_from_schema, alias="dimes.ucsd.edu"
     )
-
-
-class ReferenceType(Enum):
-    DOI = "doi"
-    ARK = "ark"
-    ALIAS = "alias"
-    ACCESSION = "accession"
-    CITATION = "citation"
-    LINK = "link"
-    RELATED = "related"
-    FLOAT = "float"
 
 
 class References(BaseModel):
