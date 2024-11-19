@@ -1,11 +1,11 @@
 import json
 from enum import Enum, StrEnum
 from datetime import datetime, date
-from typing import Literal, Any
+from typing import Literal, Any, NamedTuple
+from typing_extensions import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field, EmailStr, constr
 from pydantic.json_schema import SkipJsonSchema
-from pydantic_geojson import LineStringModel
 
 from importlib import resources
 
@@ -92,11 +92,17 @@ class References(BaseModel):
     value: str
     properties: dict[str, Any]
 
+Point2D = NamedTuple("Point2D", [("longitude", float), ("latitude", float)])
+
+class LineString(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    type: Literal["LineString"]
+    coordinates: Annotated[list[Point2D], Field(min_length=2)]
+
 class Geometry(BaseModel):
     model_config = ConfigDict(extra="forbid")
     
-    track: LineStringModel
-
+    track: LineString
 
 class Cruise(BaseModel):
     model_config = ConfigDict(extra="forbid")
