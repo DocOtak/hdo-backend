@@ -1,10 +1,24 @@
 import json
-from enum import Enum
+from enum import Enum, StrEnum
 from datetime import datetime, date
-from typing import Literal
+from typing import Literal, Any
 
 from pydantic import BaseModel, ConfigDict, Field, EmailStr, constr
 from pydantic.json_schema import SkipJsonSchema
+from pydantic_geojson import LineStringModel
+
+from importlib import resources
+
+from cchdo.hdo_backend import data
+
+_iso31661 = json.loads(resources.files(data).joinpath("iso-3166-1.json").read_text())
+_iso31663 = json.loads(resources.files(data).joinpath("iso-3166-3.json").read_text())
+_allowed_county_codes = [c["alpha-2"] for c in _iso31661]
+_allowed_county_codes.extend([c["alpha-4"] for c in _iso31663])
+# emptry string country is OK too
+_allowed_county_codes.append("")
+
+CountryEnum = StrEnum("CountryEnum", names=((country, country) if country != "" else ("Empty", "") for country in _allowed_county_codes))
 
 # https://skaaptjop.medium.com/how-i-use-pydantic-unrequired-fields-so-that-the-schema-works-0010d8758072
 def pop_default_from_schema(s):
@@ -60,6 +74,29 @@ class Sites(BaseModel):
     microstructure_ucsd_edu: dict | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema, alias="microstructure.ucsd.edu")
     dimes_ucsd_edu: dict | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema, alias="dimes.ucsd.edu")
 
+class ReferenceType(Enum):
+    DOI = "doi"
+    ARK = "ark"
+    ALIAS = "alias"
+    ACCESSION = "accession"
+    CITATION = "citation"
+    LINK = "link"
+    RELATED = "related"
+    FLOAT = "float"
+
+class References(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    organization: str
+    type: ReferenceType
+    value: str
+    properties: dict[str, Any]
+
+class Geometry(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    
+    track: LineStringModel
+
 
 class Cruise(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -74,6 +111,10 @@ class Cruise(BaseModel):
     startDate: date | Literal[""]
     endDate: date | Literal[""]
 
+    country: CountryEnum
+
+    geometry: Geometry
+
     # optional things here
     cf_robots: set[CFRobotEnum] = set()
     description: str | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
@@ -82,6 +123,8 @@ class Cruise(BaseModel):
 
     start_port: str | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
     end_port: str | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
+
+    references: list[References] | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
 
 if __name__ == "__main__":
     main_model_schema = Cruise.model_json_schema()
