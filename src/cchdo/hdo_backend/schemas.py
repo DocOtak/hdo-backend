@@ -72,7 +72,7 @@ class Cruise(BaseModel):
     collections: Collections
 
     startDate: date | Literal[""]
-    startEdate: date | Literal[""]
+    endDate: date | Literal[""]
 
     # optional things here
     cf_robots: set[CFRobotEnum] = set()
@@ -83,5 +83,6 @@ class Cruise(BaseModel):
     start_port: str | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
     end_port: str | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
 
-main_model_schema = Cruise.model_json_schema()
-print(json.dumps(main_model_schema, indent=2))
+if __name__ == "__main__":
+    main_model_schema = Cruise.model_json_schema()
+    print(json.dumps(main_model_schema, indent=2))
