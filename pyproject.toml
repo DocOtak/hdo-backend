@@ -21,6 +21,7 @@ dependencies = [
 [project.optional-dependencies]
 selftest = [
     "pytest",
+    "pytest-cov",
     "jsonpointer",
 ]
 dev = [
