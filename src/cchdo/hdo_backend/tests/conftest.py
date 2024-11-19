@@ -6,7 +6,6 @@ import pytest
 from . import data
 
 
-
 @pytest.fixture(scope="function")
 def cruise_json():
     return json.loads(files(data).joinpath("cruise.json").read_text())

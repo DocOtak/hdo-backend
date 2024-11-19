@@ -1,4 +1,5 @@
 import json
+
 import pytest
 from jsonpointer import JsonPointer
 from pydantic import ValidationError

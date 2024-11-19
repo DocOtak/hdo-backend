@@ -1,13 +1,11 @@
 import json
+from datetime import date, datetime
 from enum import Enum, StrEnum
-from datetime import datetime, date
-from typing import Literal, Any, NamedTuple
-from typing_extensions import Annotated
-
-from pydantic import BaseModel, ConfigDict, Field, EmailStr, constr
-from pydantic.json_schema import SkipJsonSchema
-
 from importlib import resources
+from typing import Annotated, Any, Literal, NamedTuple
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, constr
+from pydantic.json_schema import SkipJsonSchema
 
 from cchdo.hdo_backend import data
 
@@ -92,7 +90,9 @@ class References(BaseModel):
     value: str
     properties: dict[str, Any]
 
-Point2D = NamedTuple("Point2D", [("longitude", float), ("latitude", float)])
+class Point2D(NamedTuple):
+    longitude: float
+    latitude: float
 
 class LineString(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -106,7 +106,7 @@ class Empty(BaseModel):
 
 class Geometry(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    
+
     track: LineString | Empty
 
 class Cruise(BaseModel):
