@@ -1,0 +1,60 @@
+{
+  "events": [
+    {
+      "date": "2015-05-14T23:18:43.098175Z",
+      "type": "submission",
+      "name": "Steve Diggs",
+      "notes": "CTD from US1 in MATLAB, NetCDF and text formats (zip archive).\n\nSystem Message: Submitter requests file be attached to cruise 1185"
+    },
+    {
+      "date": "2015-05-17T00:00:00Z",
+      "type": "merge",
+      "name": "Andrew Barna",
+      "notes": "File Merged"
+    }
+  ],
+  "references":[
+    {
+      "organization" : "bco-dmo",
+      "type": "alias",
+      "value": "MV1305",
+      "properties": {"test":"test property"}
+    }
+  ],
+  "file": {
+    "body": "dGVzdCB0ZXh0IGZpbGUK", 
+    "type": "text/plain", 
+    "name": "small_file.txt"
+  }, 
+  "permissions": [], 
+  "data_type": "documentation", 
+  "file_type": "text/plain", 
+  "file_name": "small_file.txt", 
+  "container_contents": [], 
+  "file_hash": "757e2980608d5ac196e793470737649108dca8a7b3c527b58a64889cca0e10d4", 
+  "data_container": "", 
+  "file_size": 15, 
+  "file_sources": [], 
+  "data_format": "text", 
+  "role": "dataset", 
+  "other_roles": [], 
+  "description": "this is a test file",
+  "submissions": [
+  {
+    "argo": false,
+    "date": "2015-05-14T23:18:43.098175Z",
+    "email": "sdiggs@ucsd.edu",
+    "file_name": "33RR20090108_ctd-all.zip",
+    "name": "Steve Diggs",
+    "notes": "CTD from US1 in MATLAB, NetCDF and text formats (zip archive).\n\nSystem Message: Submitter requests file be attached to cruise 1185",
+    "public": true,
+    "uuid": "ca3fcf2d-38a4-4bf8-8a91-2ea363fcbda4"
+  }
+],
+"file_path": "",
+"projects": {
+  "katsumata_clean_data": {
+    "versions": ["v1"]
+    }
+  }
+}
