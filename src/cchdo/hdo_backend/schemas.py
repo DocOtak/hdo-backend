@@ -38,6 +38,9 @@ def pop_default_from_schema(s):
     s.pop("default", None)
 
 
+NoDefaultNoneField = Field(None, json_schema_extra=pop_default_from_schema)
+
+
 class LicenseEnum(Enum):
     PDM10 = "PDM 1.0"
     CCBY40 = "CC BY 4.0"
@@ -226,6 +229,17 @@ class Events(BaseModel):
     notes: str
 
 
+class Projects(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    katsumata_clean_data: dict[str, Any] | SkipJsonSchema[None] = Field(
+        None, json_schema_extra=pop_default_from_schema
+    )
+    swift_clean_data: dict[str, Any] | SkipJsonSchema[None] = Field(
+        None, json_schema_extra=pop_default_from_schema
+    )
+
+
 class File(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -235,7 +249,6 @@ class File(BaseModel):
     file_type: str
     file_hash: str
     file_path: str
-    file_mtime: str
     file_sources: set[str]
     role: str
     other_roles: set[str]
@@ -245,19 +258,14 @@ class File(BaseModel):
     container_contents: list[str]
 
     submissions: list[Submission]
-    file: FileData
     events: list[Events]
 
-    permissions: set[str] | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
-    description: str | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
-
-    references: list[References] | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
+    file_mtime: str | SkipJsonSchema[None] = NoDefaultNoneField
+    permissions: set[str] | SkipJsonSchema[None] = NoDefaultNoneField
+    description: str | SkipJsonSchema[None] = NoDefaultNoneField
+    references: list[References] | SkipJsonSchema[None] = NoDefaultNoneField
+    projects: Projects | SkipJsonSchema[None] = NoDefaultNoneField
+    file: FileData | SkipJsonSchema[None] = NoDefaultNoneField
 
 
 if __name__ == "__main__":
