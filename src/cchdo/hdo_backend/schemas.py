@@ -72,7 +72,9 @@ class Participant(BaseModel):
     role: str
     institution: str = ""
     email: str = ""
-    other: list[str] | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
+    other: list[str] | SkipJsonSchema[None] = Field(
+        None, json_schema_extra=pop_default_from_schema
+    )
 
 
 class Note(BaseModel):
@@ -115,7 +117,9 @@ class References(BaseModel):
     organization: str
     type: ReferenceType
     value: str
-    properties: dict[str, Any] | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
+    properties: dict[str, Any] | SkipJsonSchema[None] = Field(
+        None, json_schema_extra=pop_default_from_schema
+    )
 
 
 class Point2D(NamedTuple):
