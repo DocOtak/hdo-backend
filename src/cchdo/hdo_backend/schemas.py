@@ -3,8 +3,16 @@ from datetime import date, datetime
 from enum import Enum, StrEnum
 from importlib import resources
 from typing import Annotated, Any, Literal, NamedTuple
+from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, StringConstraints
+from pydantic import (
+    Base64Str,
+    BaseModel,
+    ConfigDict,
+    EmailStr,
+    Field,
+    StringConstraints,
+)
 from pydantic.json_schema import SkipJsonSchema
 
 from cchdo.hdo_backend import data
@@ -188,6 +196,71 @@ class Cruise(BaseModel):
     )
 
 
+class Submission(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+    email: str  # intentionally not validated against an email type
+    public: bool
+    argo: bool
+    notes: str
+    date: datetime
+    uuid: UUID
+    file_name: str
+
+
+class FileData(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    type: str
+    name: str
+    body: Base64Str
+
+
+class Events(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    type: str
+    date: datetime
+    name: str
+    notes: str
+
+
+class File(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    id: int
+    file_name: str = Field(min_length=1)
+    file_size: int
+    file_type: str
+    file_hash: str
+    file_path: str
+    file_mtime: str
+    file_sources: set[str]
+    role: str
+    other_roles: set[str]
+    data_container: str
+    data_format: str
+    data_type: str
+    container_contents: list[str]
+
+    submissions: list[Submission]
+    file: FileData
+    events: list[Events]
+
+    permissions: set[str] | SkipJsonSchema[None] = Field(
+        None, json_schema_extra=pop_default_from_schema
+    )
+    description: str | SkipJsonSchema[None] = Field(
+        None, json_schema_extra=pop_default_from_schema
+    )
+
+    references: list[References] | SkipJsonSchema[None] = Field(
+        None, json_schema_extra=pop_default_from_schema
+    )
+
+
 if __name__ == "__main__":
-    main_model_schema = Cruise.model_json_schema()
-    print(json.dumps(main_model_schema, indent=2))
+    cruise_model_schema = Cruise.model_json_schema()
+    file_model_schema = File.model_json_schema()
+    print(json.dumps(file_model_schema, indent=2))
