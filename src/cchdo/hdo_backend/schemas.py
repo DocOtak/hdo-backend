@@ -83,9 +83,7 @@ class Participant(BaseModel):
     role: str
     institution: str = ""
     email: str = ""
-    other: list[str] | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
+    other: list[str] | SkipJsonSchema[None] = NoDefaultNoneField
 
 
 class Note(BaseModel):
@@ -128,9 +126,7 @@ class References(BaseModel):
     organization: str
     type: ReferenceType
     value: str
-    properties: dict[str, Any] | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
+    properties: dict[str, Any] | SkipJsonSchema[None] = NoDefaultNoneField
 
 
 class Point2D(NamedTuple):
@@ -177,26 +173,14 @@ class Cruise(BaseModel):
 
     # optional things here
     cf_robots: set[CFRobotEnum] = set()
-    description: str | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
-    license: License | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
-    sites: Sites | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
+    description: str | SkipJsonSchema[None] = NoDefaultNoneField
+    license: License | SkipJsonSchema[None] = NoDefaultNoneField
+    sites: Sites | SkipJsonSchema[None] = NoDefaultNoneField
 
-    start_port: str | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
-    end_port: str | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
+    start_port: str | SkipJsonSchema[None] = NoDefaultNoneField
+    end_port: str | SkipJsonSchema[None] = NoDefaultNoneField
 
-    references: list[References] | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
+    references: list[References] | SkipJsonSchema[None] = NoDefaultNoneField
 
 
 class Submission(BaseModel):
@@ -232,12 +216,8 @@ class Events(BaseModel):
 class Projects(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    katsumata_clean_data: dict[str, Any] | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
-    swift_clean_data: dict[str, Any] | SkipJsonSchema[None] = Field(
-        None, json_schema_extra=pop_default_from_schema
-    )
+    katsumata_clean_data: dict[str, Any] | SkipJsonSchema[None] = NoDefaultNoneField
+    swift_clean_data: dict[str, Any] | SkipJsonSchema[None] = NoDefaultNoneField
 
 
 class File(BaseModel):
