@@ -28,6 +28,7 @@ dev = [
     "cchdo.hdo-backend[selftest]",
     "ruff",
     "mypy",
+    "pre-commit",
 ]
 complete = [
     "cchdo.hdo-backend[dev]"
