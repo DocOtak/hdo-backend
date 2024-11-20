@@ -48,6 +48,7 @@ class ReferenceType(Enum):
     DOI = "doi"
     ARK = "ark"
     ALIAS = "alias"
+    AWARD = "award"
     ACCESSION = "accession"
     CITATION = "citation"
     LINK = "link"
@@ -71,6 +72,7 @@ class Participant(BaseModel):
     role: str
     institution: str = ""
     email: str = ""
+    other: list[str] | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
 
 
 class Note(BaseModel):
@@ -113,7 +115,7 @@ class References(BaseModel):
     organization: str
     type: ReferenceType
     value: str
-    properties: dict[str, Any]
+    properties: dict[str, Any] | SkipJsonSchema[None] = Field(None, json_schema_extra=pop_default_from_schema)
 
 
 class Point2D(NamedTuple):
@@ -141,6 +143,8 @@ class Geometry(BaseModel):
 
 class Cruise(BaseModel):
     model_config = ConfigDict(extra="forbid")
+
+    id: int
 
     expocode: str = Field(examples=["318M20130321"])
     ship: str
