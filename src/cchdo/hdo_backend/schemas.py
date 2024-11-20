@@ -239,6 +239,7 @@ class File(BaseModel):
 
     submissions: list[Submission]
     events: list[Events]
+    cruises: set[int]
 
     file_mtime: str | SkipJsonSchema[None] = NoDefaultNoneField
     permissions: set[str] | SkipJsonSchema[None] = NoDefaultNoneField
