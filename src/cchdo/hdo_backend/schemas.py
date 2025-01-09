@@ -54,6 +54,7 @@ class CFRobotEnum(Enum):
     CTD = "ctd"
     SUMMARY = "summary"
 
+
 class OtherRolesEnum(Enum):
     PERMANENT_UNPROCESSED = "permanent_unprocessed"
 
