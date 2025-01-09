@@ -16,6 +16,7 @@ def test_valid_file_document(file_json):
     [
         ("/submissions/0/date", "2012-03-22T00:00:00Z"),
         ("/events", []),
+        ("/other_roles", []),
     ],
 )
 def test_valid_file_document_set(file_json, pointer, value):
@@ -97,6 +98,7 @@ def test_invalid_file_document_del(file_json, pointer, message):
         ("/events/0/date", "nat", "invalid event date"),
         ("/events/0/date", "2015-05-17T23:18:", "invalid event date"),
         ("/projects/katsumata_clean_data", [], "[] is not of type 'object'"),
+        ("/other_roles", ["hello"], "'hello' is not one of ['permanent_unprocessed']"),
     ],
 )
 def test_invalid_file_document_set(file_json, pointer, value, message):

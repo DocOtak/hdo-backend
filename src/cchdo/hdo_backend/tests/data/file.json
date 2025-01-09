@@ -39,7 +39,7 @@
   "file_sources": [], 
   "data_format": "text", 
   "role": "dataset", 
-  "other_roles": [], 
+  "other_roles": ["permanent_unprocessed"], 
   "description": "this is a test file",
   "submissions": [
   {
