@@ -54,6 +54,9 @@ class CFRobotEnum(Enum):
     CTD = "ctd"
     SUMMARY = "summary"
 
+class OtherRolesEnum(Enum):
+    PERMANENT_UNPROCESSED = "permanent_unprocessed"
+
 
 class ReferenceType(Enum):
     DOI = "doi"
@@ -231,7 +234,7 @@ class File(BaseModel):
     file_path: str
     file_sources: set[str]
     role: str
-    other_roles: set[str]
+    other_roles: set[OtherRolesEnum]
     data_container: str
     data_format: str
     data_type: str
